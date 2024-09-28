@@ -27,10 +27,10 @@ jobs:
     - name: Build and push Docker image
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
       run: |
         docker build -t $DOCKER_USERNAME/github-action21:${{ github.sha }} .
-        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+        echo $DOCKER_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin
         docker push $DOCKER_USERNAME/github-action21:${{ github.sha }}
 
   deploy-staging:
