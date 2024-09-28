@@ -1,21 +1,24 @@
-FROM node:16-alpine as builder
+# Use an official Node runtime as the parent image
+   FROM node:14
 
-WORKDIR /app
+   # Set the working directory in the container
+   WORKDIR /app
 
-COPY package*.json ./
+   # Copy package.json and package-lock.json
+   COPY package*.json ./
 
-COPY . .
+   # Install dependencies
+   RUN npm install
 
-RUN npm install
+   # Copy the rest of the application code
+   COPY . .
 
-#Multistage
+   # Build the app
+   RUN npm run build
 
-FROM node:16-alpine 
+   # Expose the port the app runs on
+   EXPOSE 3000
 
-WORKDIR /app
-
-COPY --from=builder /app .
-
-EXPOSE 3000
-
-CMD ["npm", "start"]
+   # Define the command to run the app
+   CMD ["npm", "start"]
+   
