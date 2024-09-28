@@ -43,8 +43,8 @@ jobs:
           key: ${{ secrets.STAGING_SSH_KEY }}
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/team2-literature-frontend:${{ github.sha }}
-            docker stop app-staging || true
-            docker run -d --name app-staging ${{ secrets.DOCKER_USERNAME }}/team2-literature-frontend:${{ github.sha }}
+            docker stop team2-literature-frontend || true
+            docker run -d --name team2-literature-frontend ${{ secrets.DOCKER_USERNAME }}/team2-literature-frontend:${{ github.sha }}
 
   deploy_production:
     needs: deploy_staging
@@ -58,9 +58,9 @@ jobs:
           username: ${{ secrets.PRODUCTION_USER }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/team2-literature-frontend:${{ github.sha }}
-            docker stop app-production || true
-            docker run -d --name app-production ${{ secrets.DOCKER_USERNAME }}/team2-literature-frontend:${{ github.sha }}
+            docker pull ${{ secrets.DOCKER_USERNAME }}/team2-literature-backend:${{ github.sha }}
+            docker stop team2-literature-backend || true
+            docker run -d --name team2-literature-backend ${{ secrets.DOCKER_USERNAME }}/team2-literature-backend:${{ github.sha }}
 
   notify:
     needs: [deploy_staging, deploy_production]
