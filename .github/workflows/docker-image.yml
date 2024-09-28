@@ -20,14 +20,14 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/your-app-name:${{ github.sha }} .
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/team2-literature-frontend:${{ github.sha }} .
         docker images
 
     - name: Run tests
-      run: docker run ${{ secrets.DOCKER_USERNAME }}/your-app-name:${{ github.sha }} npm test
+      run: docker run ${{ secrets.DOCKER_USERNAME }}/team2-literature-frontend:${{ github.sha }} npm test
 
     - name: Push to DockerHub
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/your-app-name:${{ github.sha }}
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/team2-literature-frontend:${{ github.sha }}
 
   deploy_staging:
     needs: build_and_test
@@ -40,9 +40,9 @@ jobs:
         username: ${{ secrets.STAGING_USER }}
         key: ${{ secrets.STAGING_SSH_KEY }}
         script: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/your-app-name:${{ github.sha }}
+          docker pull ${{ secrets.DOCKER_USERNAME }}/team2-literature-frontend:${{ github.sha }}
           docker stop app-staging || true
-          docker run -d --name app-staging ${{ secrets.DOCKER_USERNAME }}/your-app-name:${{ github.sha }}
+          docker run -d --name app-staging ${{ secrets.DOCKER_USERNAME }}/team2-literature-frontend:${{ github.sha }}
 
   deploy_production:
     needs: deploy_staging
@@ -56,9 +56,9 @@ jobs:
         username: ${{ secrets.PRODUCTION_USER }}
         key: ${{ secrets.PRODUCTION_SSH_KEY }}
         script: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/your-app-name:${{ github.sha }}
+          docker pull ${{ secrets.DOCKER_USERNAME }}/team2-literature-frontend:${{ github.sha }}
           docker stop app-production || true
-          docker run -d --name app-production ${{ secrets.DOCKER_USERNAME }}/your-app-name:${{ github.sha }}
+          docker run -d --name app-production ${{ secrets.DOCKER_USERNAME }}/team2-literature-frontend:${{ github.sha }}
 
   notify:
     needs: [deploy_staging, deploy_production]
